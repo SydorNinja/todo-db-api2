@@ -36,9 +36,9 @@ app.get('/todos', function(req, res) {
 
 app.get('/todos/:id', function(req, res) {
 	var todoId = parseInt(req.params.id, 10);
-	db.todo.findById(todoId).then(function(todos) {
+	db.todo.findById(todoId).then(function(todo) {
 		if (todo != null) {
-			res.json(todos);
+			res.json(todo);
 		} else {
 			res.status(404).send();
 		}
