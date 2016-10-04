@@ -47,7 +47,7 @@ app.get('/todos/:id', function(req, res) {
 	}, function(e) {
 		console.log(e);
 		res.status(500).send();
-	})
+	});
 });
 
 app.delete('/todos/:id', function(req, res) {
@@ -92,19 +92,29 @@ app.put('/todos/:id', function(req, res) {
 		}
 	}, function() {
 		res.status(500).send();
-	})
+	});
 });
 
 
 app.post('/todos', function(req, res) {
 	var body = _.pick(req.body, 'description', 'completed');
-	console.log(body.description + " " + typeof body.description);
 	db.todo.create(body).then(function(todo) {
 		res.send(todo.toJSON());
 	}, function(e) {
 		res.status(400).json(e);
 	});
 });
+
+app.post('/users', function(req, res) {
+	var body = _.pick(req.body, 'email', 'password');
+	db.user.create(body).then(function(user){
+		res.send(user.toJSON());
+	}, function(e){
+		res.status(400).json(e);
+	});
+});
+
+
 
 db.sequelize.sync().then(function() {
 	app.listen(PORT, function(req, res) {
