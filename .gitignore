@@ -1,2 +1,4 @@
-node_modules/*gc.cmd/*gs.cmd/
+node_modules/*
+gc.cmd
+gs.cmd
 data/*.sqlite
