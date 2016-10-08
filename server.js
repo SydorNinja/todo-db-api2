@@ -42,7 +42,7 @@ app.get('/todos/:id', middleware.requireAuthentication, function(req, res) {
 	var todoId = parseInt(req.params.id, 10);
 	db.todo.findById(todoId).then(function(todo) {
 		if (todo != null) {
-			res.json(todo);
+			res.json(todo.toJSON());
 		} else {
 			res.status(404).send();
 		}
@@ -61,7 +61,7 @@ app.delete('/todos/:id', middleware.requireAuthentication, function(req, res) {
 			return todo;
 		}
 	}).then(function(todo) {
-		res.json(todo);
+		res.json(todo.toJSON());
 		todo.destroy();
 	}, function(e) {
 		res.status(404).json({
@@ -101,7 +101,11 @@ app.put('/todos/:id', middleware.requireAuthentication, function(req, res) {
 app.post('/todos', middleware.requireAuthentication, function(req, res) {
 	var body = _.pick(req.body, 'description', 'completed');
 	db.todo.create(body).then(function(todo) {
-		res.send(todo.toJSON());
+		req.user.addTodo(todo).then(function() {
+			return todo.reload();
+		}).then(function(todo){
+			res.json(todo.toJSON());
+		});
 	}, function(e) {
 		res.status(400).json(e);
 	});
